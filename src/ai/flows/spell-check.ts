@@ -34,7 +34,7 @@ const spellCheckPrompt = ai.definePrompt({
 
 Text: {{{text}}}
 
-Corrected Text:`, // Removed extraneous space.
+Corrected Text:`,
 });
 
 const spellCheckFlow = ai.defineFlow(
