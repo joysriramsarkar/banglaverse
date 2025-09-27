@@ -1,5 +1,3 @@
-// GrammarCheck story: implements grammar checking for Bangla sentences with LLM-based reasoning.
-
 'use server';
 
 /**
@@ -12,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 
 const GrammarCheckInputSchema = z.object({
   sentence: z.string().describe('The Bangla sentence to check for grammatical errors.'),
@@ -32,6 +31,7 @@ const grammarCheckPrompt = ai.definePrompt({
   name: 'grammarCheckPrompt',
   input: {schema: GrammarCheckInputSchema},
   output: {schema: GrammarCheckOutputSchema},
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are a Bangla grammar expert. You will receive a Bangla sentence and your task is to check it for any grammatical errors. If there are any errors, correct them and provide an explanation of the corrections you made.
 If the sentence is grammatically correct, return the original sentence and indicate that no errors were found.
 

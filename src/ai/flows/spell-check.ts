@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 
 const SpellCheckInputSchema = z.object({
   text: z.string().describe('The Bangla text to check for spelling errors.'),
@@ -30,6 +31,7 @@ const spellCheckPrompt = ai.definePrompt({
   name: 'spellCheckPrompt',
   input: {schema: SpellCheckInputSchema},
   output: {schema: SpellCheckOutputSchema},
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are a Bangla spell checker. Correct the spelling of the following Bangla text and provide spelling suggestions.
 
 Text: {{{text}}}

@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 
 const CorrectBanglaTextInputSchema = z.object({
   textDocument: z
@@ -38,6 +39,7 @@ const prompt = ai.definePrompt({
   name: 'correctBanglaTextPrompt',
   input: {schema: CorrectBanglaTextInputSchema},
   output: {schema: CorrectBanglaTextOutputSchema},
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are a highly skilled Bangla language expert, specializing in correcting spelling and grammar in Bangla text documents. You will receive a complete Bangla text document as input, and you will return two versions of the document:
 
   1.  correctedText: A version of the document with all spelling and grammar errors corrected.

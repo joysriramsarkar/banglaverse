@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 
 const SuggestSynonymsInputSchema = z.object({
   word: z.string().describe('The Bangla word to find synonyms for.'),
@@ -29,6 +30,7 @@ const prompt = ai.definePrompt({
   name: 'suggestSynonymsPrompt',
   input: {schema: SuggestSynonymsInputSchema},
   output: {schema: SuggestSynonymsOutputSchema},
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are a helpful assistant that provides synonyms for Bangla words.
 
   Provide a list of synonyms for the following Bangla word:

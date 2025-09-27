@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
 
 const DictionaryLookupInputSchema = z.object({
   word: z.string().describe('The Bangla word to look up in the dictionary.'),
@@ -31,6 +32,7 @@ const prompt = ai.definePrompt({
   name: 'dictionaryLookupPrompt',
   input: {schema: DictionaryLookupInputSchema},
   output: {schema: DictionaryLookupOutputSchema},
+  model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are a highly knowledgeable Bangla language expert and lexicographer. Your task is to provide detailed information about a given Bangla word.
 
 For the word "{{word}}", please provide the following:
