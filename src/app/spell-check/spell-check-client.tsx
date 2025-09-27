@@ -61,7 +61,7 @@ export default function SpellCheckClient() {
         </CardFooter>
       </form>
 
-      {state && (state.correctedText || state.suggestions.length > 0) && (
+      {state && (state.correctedText || (state.suggestions && state.suggestions.length > 0)) && (
         <div className="p-6 pt-0">
           <div className="grid md:grid-cols-2 gap-6 mt-6">
             <Card>
@@ -80,7 +80,7 @@ export default function SpellCheckClient() {
                 <CardTitle>বানানের পরামর্শ</CardTitle>
               </CardHeader>
               <CardContent>
-                {state.suggestions.length > 0 ? (
+                {state.suggestions && state.suggestions.length > 0 ? (
                    <div className="flex flex-wrap gap-2">
                     {state.suggestions.map((suggestion, index) => (
                       <Badge key={index} variant="outline">{suggestion}</Badge>
