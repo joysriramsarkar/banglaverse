@@ -27,24 +27,28 @@ export function useFavorites() {
   }, []);
 
   const addFavorite = useCallback((word: FavoriteWord) => {
-    const newFavorites = [...favorites, word];
-    setFavorites(newFavorites);
-    try {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
-    } catch (error) {
-      console.error('Failed to save favorites to localStorage', error);
-    }
-  }, [favorites]);
+    setFavorites(prevFavorites => {
+      const newFavorites = [...prevFavorites, word];
+      try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
+      } catch (error) {
+        console.error('Failed to save favorites to localStorage', error);
+      }
+      return newFavorites;
+    });
+  }, []);
 
   const removeFavorite = useCallback((word: string) => {
-    const newFavorites = favorites.filter(fav => fav.word !== word);
-    setFavorites(newFavorites);
-    try {
-      localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
-    } catch (error) {
-      console.error('Failed to save favorites to localStorage', error);
-    }
-  }, [favorites]);
+    setFavorites(prevFavorites => {
+      const newFavorites = prevFavorites.filter(fav => fav.word !== word);
+      try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
+      } catch (error) {
+        console.error('Failed to save favorites to localStorage', error);
+      }
+      return newFavorites;
+    });
+  }, []);
 
   const isFavorite = useCallback((word: string) => {
     return favorites.some(fav => fav.word === word);
