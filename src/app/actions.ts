@@ -4,31 +4,9 @@ import { suggestSynonyms, type SuggestSynonymsInput } from '@/ai/flows/synonym-s
 import { spellCheck, type SpellCheckInput } from '@/ai/flows/spell-check';
 import { grammarCheck, type GrammarCheckInput } from '@/ai/flows/grammar-check';
 import { correctBanglaText, type CorrectBanglaTextInput } from '@/ai/flows/advanced-text-correction';
+import { dictionaryLookup, type DictionaryLookupInput } from '@/ai/flows/dictionary-lookup';
 import { z } from 'zod';
 
-// Mock dictionary data
-const dictionary: { [key: string]: { pronunciation: string; meaning: string; examples: string[] } } = {
-  'আনন্দ': {
-    pronunciation: '[anondo]',
-    meaning: 'হর্ষ, খুশি, তৃপ্তি, সুখ।',
-    examples: ['তার মনে অনেক আনন্দ।', 'পূজার আনন্দে সবাই মেতে উঠেছে।'],
-  },
-  'ঘর': {
-    pronunciation: '[ghor]',
-    meaning: 'বাসস্থান, আবাস, নিলয়, গৃহ।',
-    examples: ['সে তার নতুন ঘরে প্রবেশ করল।', 'পাখিরা সন্ধ্যায় ঘরে ফেরে।'],
-  },
-  'জল': {
-    pronunciation: '[jol]',
-    meaning: 'পানি, বারি, নীর।',
-    examples: ['নদীর জল খুব স্বচ্ছ।', 'তৃষ্ণার্ত পথিক জল পান করল।']
-  },
-  ' আকাশ': {
-    pronunciation: '[akash]',
-    meaning: 'গগন, অম্বর, ব্যোম।',
-    examples: ['নীল আকাশে সাদা মেঘ ভেসে বেড়াচ্ছে।', 'রাতের আকাশে অনেক তারা দেখা যায়।']
-  }
-};
 
 export async function getWordDetails(word: string) {
   if (!word) {
@@ -37,17 +15,19 @@ export async function getWordDetails(word: string) {
 
   try {
     const synonymInput: SuggestSynonymsInput = { word };
-    const synonymResult = await suggestSynonyms(synonymInput);
+    const dictionaryInput: DictionaryLookupInput = { word };
 
-    const details = dictionary[word] || {
-      pronunciation: 'দুঃখিত, উচ্চারণ পাওয়া যায়নি।',
-      meaning: 'দুঃখিত, এই শব্দের অর্থ আমাদের অভিধানে নেই।',
-      examples: [],
-    };
+    // Run both AI calls in parallel for better performance
+    const [synonymResult, dictionaryResult] = await Promise.all([
+        suggestSynonyms(synonymInput),
+        dictionaryLookup(dictionaryInput)
+    ]);
     
     return {
       word,
-      ...details,
+      pronunciation: dictionaryResult.pronunciation,
+      meaning: dictionaryResult.meaning,
+      examples: dictionaryResult.examples,
       synonyms: synonymResult.synonyms,
     };
   } catch (e) {
