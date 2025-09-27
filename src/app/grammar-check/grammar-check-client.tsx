@@ -1,7 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -28,7 +28,7 @@ function SubmitButton() {
 }
 
 export default function GrammarCheckClient() {
-  const [state, formAction] = useFormState(performGrammarCheck, initialState);
+  const [state, formAction] = useActionState(performGrammarCheck, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
