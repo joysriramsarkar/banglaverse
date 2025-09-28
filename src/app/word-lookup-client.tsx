@@ -112,9 +112,9 @@ export default function WordLookupClient() {
             <div>
               <h3 className="font-semibold text-lg">সমার্থক শব্দ:</h3>
               <div className="flex flex-wrap gap-2 mt-2">
-                  result.synonyms.map((synonym, index) => (
+                  {result.synonyms.map((synonym, index) => (
                     <Badge key={index} variant="secondary">{synonym}</Badge>
-                  ))
+                  ))}
               </div>
             </div>
             </>
