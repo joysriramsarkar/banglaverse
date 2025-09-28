@@ -91,12 +91,12 @@ export async function performSpellCheck(prevState: any, formData: FormData) {
   const { text } = validatedFields.data;
   const wordList = await getWordList();
   
-  const wordsInText = text.split(/(\s+)/);
+  const wordsInText = text.split(/([,.\s।]+)/);
   const suggestions: string[] = [];
   let correctedText = '';
 
   wordsInText.forEach(word => {
-    const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+    const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()।]/g,"");
     if (cleanWord && !wordList.has(cleanWord.toLowerCase())) {
         if(!suggestions.includes(cleanWord)) {
             suggestions.push(cleanWord);
