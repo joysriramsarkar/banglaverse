@@ -32,7 +32,7 @@ export default function GrammarCheckClient() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (state?.error) {
+    if (state && 'error' in state && state.error) {
       toast({
         variant: 'destructive',
         title: 'ত্রুটি',
@@ -62,7 +62,7 @@ export default function GrammarCheckClient() {
         </CardFooter>
       </form>
 
-      {state?.correctedSentence && (
+      {state && 'correctedSentence' in state && state.correctedSentence && (
         <div className="p-6 pt-0">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
