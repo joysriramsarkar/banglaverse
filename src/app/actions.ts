@@ -7,28 +7,14 @@ import { z } from 'zod';
 import fs from 'fs';
 import path from 'path';
 
-// Firebase-related imports and initialization
-import * as admin from 'firebase-admin';
-
-if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      projectId: 'studio-6801224319-7a315',
-    });
-  } catch (error) {
-    console.error('Firebase initialization error', error);
-  }
-}
-
-const db = admin.firestore();
-
-// Structure of the data in Firestore
-interface FirestoreWord {
+// Structure of the data in dictionary-full.json
+interface DictionaryEntry {
   bn: string;
-  en: string[];
+  en: string | string[];
   bn_syns: string[];
   en_syns: string[];
   sents: string[];
+  pron: string[];
 }
 
 // Structure the client component expects
@@ -41,7 +27,24 @@ export type WordDetails = {
   error?: string;
 };
 
-// getWordDetails function using Firebase
+let dictionaryData: DictionaryEntry[] | null = null;
+
+async function getDictionaryData(): Promise<DictionaryEntry[]> {
+  if (dictionaryData) {
+    return dictionaryData;
+  }
+  try {
+    const filePath = path.join(process.cwd(), 'src', 'lib', 'data', 'dictionary-full.json');
+    const fileContent = await fs.promises.readFile(filePath, 'utf-8');
+    dictionaryData = JSON.parse(fileContent);
+    return dictionaryData!;
+  } catch (error) {
+    console.error("Error reading or parsing dictionary file:", error);
+    throw new Error('অভিধানের ডেটা লোড করতে সমস্যা হয়েছে।');
+  }
+}
+
+// getWordDetails function using local dictionary file
 export async function getWordDetails(
   word: string,
 ): Promise<WordDetails | { error: string }> {
@@ -50,24 +53,36 @@ export async function getWordDetails(
   }
 
   try {
-    const docRef = db.collection('dictionary').doc(word.toLowerCase());
-    const doc = await docRef.get();
+    const dictionary = await getDictionaryData();
+    const searchWord = word.toLowerCase();
 
-    if (doc.exists) {
-      const data = doc.data() as FirestoreWord;
+    const foundWord = dictionary.find(entry => {
+      if (typeof entry.en === 'string') {
+        return entry.en.toLowerCase() === searchWord;
+      } else if (Array.isArray(entry.en)) {
+        return entry.en.some(enWord => enWord.toLowerCase() === searchWord);
+      }
+      return false;
+    });
+
+    if (foundWord) {
+      const pronunciation = (foundWord.pron && foundWord.pron.length > 1 && foundWord.pron[1]) ? foundWord.pron[1] : foundWord.bn;
       const result: WordDetails = {
         word: word,
-        pronunciation: data.bn,
-        meaning: data.en.join(', '),
-        synonyms: data.bn_syns,
-        examples: data.sents,
+        pronunciation: pronunciation,
+        meaning: foundWord.bn,
+        synonyms: foundWord.bn_syns,
+        examples: foundWord.sents,
       };
       return result;
     } else {
       return { error: `"${word}" শব্দটি অভিধানে পাওয়া যায়নি।` };
     }
   } catch (error) {
-    console.error('Error fetching from Firestore:', error);
+    console.error('Error in getWordDetails:', error);
+    if (error instanceof Error) {
+        return { error: error.message };
+    }
     return { error: 'ডেটাবেস থেকে তথ্য আনতে সমস্যা হয়েছে।' };
   }
 }
