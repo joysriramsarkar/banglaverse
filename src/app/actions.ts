@@ -34,7 +34,7 @@ async function getDictionaryData(): Promise<DictionaryEntry[]> {
     return dictionaryData;
   }
   try {
-    const filePath = path.join(process.cwd(), 'src', 'lib', 'data', 'dictionary-full.json');
+    const filePath = path.join(process.cwd(), 'data', 'dictionary-full.json');
     const fileContent = await fs.promises.readFile(filePath, 'utf-8');
     dictionaryData = JSON.parse(fileContent);
     return dictionaryData!;
@@ -111,7 +111,7 @@ const spellCheckSchema = z.object({
 
 async function getWordList() {
     try {
-        const filePath = path.join(process.cwd(), 'src', 'lib', 'data', 'word-list.txt');
+        const filePath = path.join(process.cwd(), 'data', 'word-list.txt');
         const fileContent = await fs.promises.readFile(filePath, 'utf-8');
         const words = fileContent.split('\n').map(w => w.trim().toLowerCase());
         return new Set(words);
