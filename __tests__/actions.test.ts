@@ -25,24 +25,39 @@ describe('performSpellCheck', () => {
 });
 
 describe('getWordDetails', () => {
-  it('should return details for an existing word', async () => {
+  it('should return details when searching for an English word', async () => {
     const result = await getWordDetails('carry-on');
-    // Ensure no error is returned
     expect(result.error).toBeUndefined();
 
-    // Check if the word property exists and is correct
     if ('word' in result) {
-      expect(result.word).toBe('carry-on');
+      expect(result.word).toBe('বহন অন');
       expect(result.pronunciation).toBe('Bahana ana');
-      expect(result.meaning).toBe('বহন অন');
+      expect(result.meaning).toBe('carry-on');
       expect(result.synonyms).toEqual([]);
       expect(result.examples).toEqual([
         "And it can be attached to purses, laptops, <b>carry-ons</b> , and suitcases.",
         "Though the no-bags option is an appealing one, I think I'll stick to <b>carry-on</b> luggage."
       ]);
     } else {
-      // Fail the test if word property is not in the result
       fail('Word details not found for "carry-on"');
+    }
+  });
+
+  it('should return details when searching for a Bengali word', async () => {
+    const result = await getWordDetails('বহন অন');
+    expect(result.error).toBeUndefined();
+
+    if ('word' in result) {
+      expect(result.word).toBe('বহন অন');
+      expect(result.pronunciation).toBe('Bahana ana');
+      expect(result.meaning).toBe('carry-on');
+      expect(result.synonyms).toEqual([]);
+      expect(result.examples).toEqual([
+        "And it can be attached to purses, laptops, <b>carry-ons</b> , and suitcases.",
+        "Though the no-bags option is an appealing one, I think I'll stick to <b>carry-on</b> luggage."
+      ]);
+    } else {
+      fail('Word details not found for "বহন অন"');
     }
   });
 

@@ -57,20 +57,23 @@ export async function getWordDetails(
     const searchWord = word.toLowerCase();
 
     const foundWord = dictionary.find(entry => {
-      if (typeof entry.en === 'string') {
-        return entry.en.toLowerCase() === searchWord;
-      } else if (Array.isArray(entry.en)) {
-        return entry.en.some(enWord => enWord.toLowerCase() === searchWord);
-      }
-      return false;
+      const isBengaliMatch = entry.bn.toLowerCase() === searchWord;
+
+      const isEnglishMatch = (typeof entry.en === 'string')
+        ? entry.en.toLowerCase() === searchWord
+        : Array.isArray(entry.en)
+          ? entry.en.some(enWord => enWord.toLowerCase() === searchWord)
+          : false;
+
+      return isBengaliMatch || isEnglishMatch;
     });
 
     if (foundWord) {
       const pronunciation = (foundWord.pron && foundWord.pron.length > 1 && foundWord.pron[1]) ? foundWord.pron[1] : foundWord.bn;
       const result: WordDetails = {
-        word: word,
+        word: foundWord.bn, // Always show the Bengali word as the main word
         pronunciation: pronunciation,
-        meaning: foundWord.bn,
+        meaning: Array.isArray(foundWord.en) ? foundWord.en.join(', ') : foundWord.en as string, // Always show English as meaning
         synonyms: foundWord.bn_syns,
         examples: foundWord.sents,
       };
