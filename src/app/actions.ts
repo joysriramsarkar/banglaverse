@@ -3,8 +3,9 @@
 import { grammarCheck, type GrammarCheckInput } from '@/ai/flows/grammar-check';
 import { correctBanglaText, type CorrectBanglaTextInput } from '@/ai/flows/advanced-text-correction';
 import { z } from 'zod';
-import fs from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
+import readline from 'readline';
 
 type DictionaryEntry = {
     bn: string;
@@ -39,22 +40,30 @@ export async function getWordDetails(word: string) {
 
   try {
     const filePath = path.join(process.cwd(), 'src', 'lib', 'data', 'dictionary-full.json');
-    const fileContent = await fs.readFile(filePath, 'utf-8');
-    const dictionary: DictionaryEntry[] = JSON.parse(fileContent);
+    const fileStream = fs.createReadStream(filePath);
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+    });
 
-    const foundWord = dictionary.find(entry => entry.bn.toLowerCase() === word.toLowerCase());
-
-    if (foundWord) {
-      return {
-        word: foundWord.bn,
-        pronunciation: foundWord.pron[1] || foundWord.pron[0] || '',
-        meaning: foundWord.en,
-        examples: foundWord.sents.map(s => s.replace(/<b>(.*?)<\/b>/g, '$1')),
-        synonyms: foundWord.bn_syns,
-      };
-    } else {
-      return { error: `"${word}" শব্দটি অভিধানে পাওয়া যায়নি।` };
+    for await (const line of rl) {
+        try {
+            const entry: DictionaryEntry = JSON.parse(line.endsWith(',') ? line.slice(0, -1) : line);
+            if (entry.bn.toLowerCase() === word.toLowerCase()) {
+                return {
+                    word: entry.bn,
+                    pronunciation: entry.pron[1] || entry.pron[0] || '',
+                    meaning: entry.en,
+                    examples: entry.sents.map(s => s.replace(/<b>(.*?)<\/b>/g, '$1')),
+                    synonyms: entry.bn_syns,
+                };
+            }
+        } catch (e) {
+            // Ignore parsing errors for lines that are not valid JSON
+        }
     }
+
+    return { error: `"${word}" শব্দটি অভিধানে পাওয়া যায়নি।` };
   } catch (e) {
       console.error(e);
       return { error: 'অভিধান ফাইল পড়তে সমস্যা হয়েছে।' };
@@ -68,7 +77,7 @@ const spellCheckSchema = z.object({
 async function getWordList() {
     try {
         const filePath = path.join(process.cwd(), 'src', 'lib', 'data', 'word-list.txt');
-        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const fileContent = await fs.promises.readFile(filePath, 'utf-8');
         const words = fileContent.split('\n').map(w => w.trim().toLowerCase());
         return new Set(words);
     } catch (error) {
