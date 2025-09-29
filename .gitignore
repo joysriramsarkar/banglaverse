@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -43,3 +44,11 @@ next-env.d.ts
 # firebase
 firebase-debug.log
 firestore-debug.log
+=======
+
+
+# Ignore service account key
+serviceAccountKey.json
+node_modules
+.next/
+>>>>>>> 3b6c7751bee3c7d40d4d8cac43a5d55ea11fd904

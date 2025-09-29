@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Loader2, Search, Star } from 'lucide-react';
+<<<<<<< HEAD
 import { getWordDetails } from './actions';
 import { useFavorites, type FavoriteWord } from '@/hooks/use-favorites';
 import { useToast } from '@/hooks/use-toast';
@@ -19,6 +20,12 @@ type WordDetails = {
   error?: string;
 };
 
+=======
+import { getWordDetails, type WordDetails } from './actions';
+import { useFavorites, type FavoriteWord } from '@/hooks/use-favorites';
+import { useToast } from '@/hooks/use-toast';
+
+>>>>>>> 3b6c7751bee3c7d40d4d8cac43a5d55ea11fd904
 export default function WordLookupClient() {
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<WordDetails | null>(null);
