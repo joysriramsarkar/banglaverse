@@ -31,7 +31,7 @@ export default function SpellCheckClient() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (state?.error) {
+    if (state && 'error' in state && state.error) {
       toast({
         variant: 'destructive',
         title: 'ত্রুটি',
@@ -61,7 +61,7 @@ export default function SpellCheckClient() {
         </CardFooter>
       </form>
 
-      {state?.suggestions && state.suggestions.length > 0 && (
+      {state && 'suggestions' in state && Array.isArray(state.suggestions) && state.suggestions.length > 0 && (
         <div className="p-6 pt-0">
             <Card>
               <CardHeader>

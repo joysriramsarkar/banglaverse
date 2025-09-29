@@ -31,7 +31,7 @@ export default function AdvancedCorrectionClient() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (state?.error) {
+    if (state && 'error' in state && state.error) {
       toast({
         variant: 'destructive',
         title: 'ত্রুটি',
@@ -72,7 +72,7 @@ export default function AdvancedCorrectionClient() {
         </form>
       </Card>
       
-      {state?.correctedText && (
+      {state && 'correctedText' in state && state.correctedText && (
         <Tabs defaultValue="corrected" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="corrected">সংশোধিত পাঠ্য</TabsTrigger>
