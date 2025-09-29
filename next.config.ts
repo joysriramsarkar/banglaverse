@@ -1,4 +1,6 @@
 import type {NextConfig} from 'next';
+import CopyPlugin from 'copy-webpack-plugin';
+import path from 'path';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -23,6 +25,21 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins.push(
+        new CopyPlugin({
+          patterns: [
+            {
+              from: path.join(__dirname, 'data'),
+              to: path.join(__dirname, '.next/server/data'),
+            },
+          ],
+        })
+      );
+    }
+    return config;
   },
 };
 
