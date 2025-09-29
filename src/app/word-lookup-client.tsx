@@ -55,10 +55,10 @@ export default function WordLookupClient() {
 
     if (isFavorite(result.word)) {
       removeFavorite(result.word);
-      toast({ title: "প্রিয় তালিকা থেকে মুছে ফেলা হয়েছে" });
+      toast({ title: "প্রিয় তালিকা থেকে মুছে ফেলা হয়েছে" });
     } else {
       addFavorite(fav);
-      toast({ title: "প্রিয় তালিকায় যোগ করা হয়েছে" });
+      toast({ title: "প্রিয় তালিকায় যোগ করা হয়েছে" });
     }
   };
 
@@ -95,7 +95,7 @@ export default function WordLookupClient() {
                 variant="ghost"
                 size="icon"
                 onClick={handleFavoriteToggle}
-                aria-label="প্রিয় তালিকায় যোগ করুন"
+                aria-label="প্রিয় তালিকায় যোগ করুন"
               >
                 <Star className={isFavorite(result.word) ? 'fill-accent text-accent' : ''} />
               </Button>

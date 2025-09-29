@@ -19,7 +19,7 @@ const navItems = [
   { href: '/spell-check', label: 'বানান পরীক্ষা', icon: SpellCheck },
   { href: '/grammar-check', label: 'ব্যাকরণ পরীক্ষা', icon: FileSignature },
   { href: '/advanced-correction', label: 'ডকুমেন্ট সংশোধন', icon: FileText },
-  { href: '/favorites', label: 'প্রিয় শব্দ', icon: Star },
+  { href: '/favorites', label: 'প্রিয় শব্দ', icon: Star },
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

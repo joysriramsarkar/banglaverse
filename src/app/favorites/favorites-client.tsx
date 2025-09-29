@@ -30,7 +30,7 @@ export default function FavoritesClient() {
     return (
       <div className="text-center py-16 border-2 border-dashed rounded-lg">
         <BookOpen className="mx-auto h-12 w-12 text-muted-foreground" />
-        <h3 className="mt-4 text-lg font-medium">কোনো প্রিয় শব্দ নেই</h3>
+        <h3 className="mt-4 text-lg font-medium">কোনো প্রিয় শব্দ নেই</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           অভিধান থেকে আপনার পছন্দের শব্দ যোগ করুন।
         </p>
