@@ -6,18 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Loader2, Search, Star } from 'lucide-react';
-import { getWordDetails } from './actions';
+import { getWordDetails, type WordDetails } from './actions';
 import { useFavorites, type FavoriteWord } from '@/hooks/use-favorites';
 import { useToast } from '@/hooks/use-toast';
-
-type WordDetails = {
-  word: string;
-  pronunciation: string;
-  meaning: string;
-  examples: string[];
-  synonyms: string[];
-  error?: string;
-};
 
 export default function WordLookupClient() {
   const [isPending, startTransition] = useTransition();
