@@ -14,7 +14,8 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
-export interface SearchResult {
+// This is the structure of the data in Firestore
+interface FirestoreWord {
   bn: string;
   en: string[];
   bn_syns: string[];
@@ -22,9 +23,20 @@ export interface SearchResult {
   sents: string[];
 }
 
-export async function getWordDetails(word: string): Promise<SearchResult | null> {
+// This is the structure the client component expects
+export type WordDetails = {
+  word: string;
+  pronunciation: string;
+  meaning: string;
+  examples: string[];
+  synonyms: string[];
+};
+
+export async function getWordDetails(
+  word: string,
+): Promise<WordDetails | { error: string }> {
   if (!word) {
-    return null;
+    return { error: 'অনুগ্রহ করে একটি শব্দ লিখুন।' };
   }
 
   try {
@@ -32,12 +44,21 @@ export async function getWordDetails(word: string): Promise<SearchResult | null>
     const doc = await docRef.get();
 
     if (doc.exists) {
-      return doc.data() as SearchResult;
+      const data = doc.data() as FirestoreWord;
+
+      const result: WordDetails = {
+        word: word,
+        pronunciation: data.bn,
+        meaning: data.en.join(', '),
+        synonyms: data.bn_syns,
+        examples: data.sents,
+      };
+      return result;
     } else {
-      return null;
+      return { error: `"${word}" শব্দটি অভিধানে পাওয়া যায়নি।` };
     }
   } catch (error) {
     console.error('Error fetching from Firestore:', error);
-    return null;
+    return { error: 'ডেটাবেস থেকে তথ্য আনতে সমস্যা হয়েছে।' };
   }
 }
