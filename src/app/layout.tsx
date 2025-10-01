@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
-import './globals.css';import { Analytics } from '@vercel/analytics/react';
+import './globals.css';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Toaster } from '@/components/ui/toaster';
 import AppLayout from '@/components/app-layout';
 
@@ -30,6 +32,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <AppLayout>{children}</AppLayout>        <Toaster />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
