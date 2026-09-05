@@ -71,3 +71,27 @@ describe('getWordDetails', () => {
     expect(result.error).toBe('অনুগ্রহ করে একটি শব্দ লিখুন।');
   });
 });
+
+describe('performGrammarCheck offline engine', () => {
+  it('should detect and correct plural redundancy and guru-chandali errors', async () => {
+    const { performGrammarCheck } = await import('../src/app/actions');
+    const formData = new FormData();
+    formData.append('sentence', 'সকল শিক্ষকগণ আসিয়া উপস্থিত হইলেন।');
+    const result = await performGrammarCheck({}, formData);
+    
+    expect(result.error).toBeNull();
+    expect(result.correctedSentence).toContain('সকল শিক্ষক');
+    expect(result.correctedSentence).toContain('এসে');
+  });
+
+  it('should detect common spelling and grammar errors like ইতিমধ্যে and উপরোক্ত', async () => {
+    const { performGrammarCheck } = await import('../src/app/actions');
+    const formData = new FormData();
+    formData.append('sentence', 'ইতিমধ্যে উপরোক্ত বিষয়ে সিদ্ধান্ত হয়েছে।');
+    const result = await performGrammarCheck({}, formData);
+
+    expect(result.error).toBeNull();
+    expect(result.correctedSentence).toContain('ইতোমধ্যে');
+    expect(result.correctedSentence).toContain('উপর্যুক্ত');
+  });
+});
